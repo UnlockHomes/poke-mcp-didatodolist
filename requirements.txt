@@ -10,4 +10,4 @@ matplotlib>=3.4.0
 scikit-learn>=0.24.0
 requests>=2.28.0
 fastapi>=0.104.0
-uvicorn>=0.24.0 
+uvicorn[standard]>=0.24.0 
