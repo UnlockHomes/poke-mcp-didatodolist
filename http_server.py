@@ -16,8 +16,7 @@ import dotenv
 # Load environment variables
 dotenv.load_dotenv()
 
-# Import MCP server and tools
-from mcp_server import create_server
+# Import API initialization
 from tools.official_api import init_api
 
 # Import logic functions directly
@@ -57,17 +56,26 @@ app.add_middleware(
 )
 
 # Initialize API (OAuth)
+# 在 Railway 中，环境变量通过 Railway Variables 设置，不需要 .env 文件
 try:
     init_api()
-    print("已初始化官方API 客户端（.env-only）")
+    print("已初始化官方API 客户端")
 except Exception as e:
-    print(f"警告：未能初始化官方API（可能尚未完成 OAuth 认证 .env）：{e}")
+    print(f"警告：未能初始化官方API：{e}")
+    print("请确保在 Railway Variables 中设置了以下环境变量：")
+    print("  - DIDA_CLIENT_ID")
+    print("  - DIDA_CLIENT_SECRET")
+    print("  - DIDA_ACCESS_TOKEN")
 
 # Initialize analytics manager
 analytics_manager = AnalyticsManager()
 
 # API Key authentication
+# 从环境变量读取，Railway 会通过 Variables 设置
 API_KEY = os.environ.get("MCP_API_KEY")
+if not API_KEY:
+    print("警告：MCP_API_KEY 环境变量未设置，将使用默认值（不安全）")
+    API_KEY = "123"  # 默认值，仅用于开发
 
 # Debug endpoint to check if API_KEY is loaded (remove in production)
 @app.get("/debug/api-key")

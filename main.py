@@ -87,6 +87,17 @@ def ensure_oauth_ready() -> bool:
 def main():
     """主函数"""
     args = parse_args()
+    
+    # HTTP 模式直接启动 FastAPI，不需要 FastMCP
+    if args.http:
+        # 使用HTTP模式（FastAPI）
+        print("启动滴答清单MCP服务器（HTTP模式）...")
+        import uvicorn
+        from http_server import app
+        uvicorn.run(app, host=args.host, port=args.port)
+        return
+    
+    # 非 HTTP 模式才需要 FastMCP
     if not ensure_oauth_ready():
         # 不中止运行，允许用户仅安装/查看说明
         pass
@@ -99,12 +110,6 @@ def main():
         # 安装到Claude Desktop
         print("正在安装到MCP客户端...")
         os.system("fastmcp install")
-    elif args.http:
-        # 使用HTTP模式（FastAPI）
-        print("启动滴答清单MCP服务器（HTTP模式）...")
-        import uvicorn
-        from http_server import app
-        uvicorn.run(app, host=args.host, port=args.port)
     else:
         # 直接运行
         print("启动滴答清单MCP服务器...")
