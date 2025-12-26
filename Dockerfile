@@ -24,7 +24,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 复制源码
 COPY . .
 
+# Railway 会通过 PORT 环境变量提供端口，main.py 会自动读取
 EXPOSE 3000
 
-# 以 SSE 模式启动服务，监听 0.0.0.0:3000
-CMD ["python", "main.py", "--sse", "--host", "0.0.0.0", "--port", "3000"]
+# 以 HTTP 模式启动服务（FastAPI），监听 0.0.0.0（Railway 要求）
+# http_server.py 会自动从 PORT 环境变量读取端口，如果没有则使用默认值 3000
+CMD ["python", "main.py", "--http", "--host", "0.0.0.0"]

@@ -208,11 +208,23 @@ class DidaOAuthClient:
             response.raise_for_status()
 
             token_data = response.json()
+            # 调试：打印完整响应（仅用于调试）
+            print(f"Token 响应字段: {list(token_data.keys())}")
+            
             self.access_token = token_data.get("access_token")
             self.refresh_token = token_data.get("refresh_token")
+            
+            # 检查是否有其他可能的字段名
+            if not self.refresh_token:
+                # 尝试其他可能的字段名
+                self.refresh_token = token_data.get("refreshToken") or token_data.get("refresh_token")
 
             if self.access_token:
                 print("✅ 成功获取访问令牌!")
+                if self.refresh_token:
+                    print(f"✅ 同时获取到 refresh_token: {self.refresh_token[:20]}...")
+                else:
+                    print("⚠️  注意：API 响应中未包含 refresh_token（这可能是正常的，取决于 API 实现）")
                 return True
             else:
                 print("❌ 令牌交换失败: 响应中无access_token")

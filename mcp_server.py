@@ -99,7 +99,10 @@ def create_server(auth_info=None):
                     instructions="滴答清单MCP服务，允许AI模型通过MCP协议操作滴答清单待办事项。"
                 )
                 # 包裹 ASGI app，校验 x-api-key
-                server.app = with_api_key_auth(server.app, expected_key=EXPECTED_API_KEY, sse_path="/sse")
+                # 使用 /mcp 路径以兼容 Poke 等客户端
+                # 如果 fastmcp 默认使用 /sse，则重写 /mcp -> /sse
+                server.app = with_api_key_auth(server.app, expected_key=EXPECTED_API_KEY, 
+                                              sse_path="/mcp", rewrite_to="/sse")
             else:
                 raise
 

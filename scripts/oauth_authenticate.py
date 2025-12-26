@@ -104,7 +104,7 @@ def main():
     print("步骤1: 启动本地回调服务器")
     print(f"端口: {args.port}\n")
 
-    success = oauth_client.authorize(auto_open_browser=False)
+    success = oauth_client.authorize(auto_open_browser=True)
 
     if success:
         # 写入 .env（不会加入版本控制）
