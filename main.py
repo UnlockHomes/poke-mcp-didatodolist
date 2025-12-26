@@ -10,7 +10,6 @@ import argparse
 import json
 from pathlib import Path
 import dotenv
-from mcp_server import create_server
 from tools.official_api import init_api
 
 # 加载环境变量（支持 .env）
@@ -98,6 +97,9 @@ def main():
         return
     
     # 非 HTTP 模式才需要 FastMCP
+    # 延迟导入，避免在 HTTP 模式下加载 FastMCP
+    from mcp_server import create_server
+    
     if not ensure_oauth_ready():
         # 不中止运行，允许用户仅安装/查看说明
         pass
